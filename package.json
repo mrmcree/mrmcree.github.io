@@ -1,0 +1,6 @@
+{
+    "scripts": {
+        "docs:dev":"vuepress dev docs --open --no-cache",
+        "docs:build":"vuepress build docs"
+    }
+}
