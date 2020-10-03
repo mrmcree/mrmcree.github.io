@@ -1,0 +1,394 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#202020">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+  
+  
+    <meta name="keywords" content="前端,">
+  
+  
+    <meta name="description" content="code as poetry">
+  
+  
+  <link rel="icon" type="image/x-icon" href="/logo.jpg">
+  
+  <title>前端开发者应该明白的浏览器工作原理(转) [ nico blog ]</title>
+  
+    <!-- stylesheets list from config.yml -->
+    
+      <link rel="stylesheet" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css">
+    
+      <link rel="stylesheet" href="/css/xoxo.css">
+    
+  
+</head>
+
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+
+<body>
+  <div class="nav-container">
+    <nav class="home-menu pure-menu pure-menu-horizontal">
+  <a class="pure-menu-heading" href="/">
+    <img class="avatar" src="/images/logo.jpg">
+    <span class="title">nico blog</span>
+  </a>
+
+  <ul class="pure-menu-list clearfix">
+      
+          
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link">首页</a></li>
+          
+      
+          
+            <li class="pure-menu-item"><a href="/archives" class="pure-menu-link">归档</a></li>
+          
+      
+          
+            <li class="pure-menu-item"><a href="/tags" class="pure-menu-link">标签</a></li>
+          
+      
+          
+            <li class="pure-menu-item"><a href="/about" class="pure-menu-link">关于</a></li>
+          
+      
+          
+            <li class="pure-menu-item"><a href="/laboratory" class="pure-menu-link">实验室</a></li>
+          
+      
+  </ul>
+   
+</nav>
+  </div>
+
+  <div class="container" id="content-outer">
+    <div class="inner" id="content-inner">
+      <div class="post-container">
+  <article class="post" id="post">
+    <header class="post-header text-center">
+      <h1 class="title">
+        前端开发者应该明白的浏览器工作原理(转)
+      </h1>
+      <span>
+        
+        <time class="time" datetime="2019-03-05T08:46:03.000Z">
+        2019-03-05
+      </time>
+        
+      </span>
+      <span class="slash">/</span>
+      <span class="post-meta">
+      <span class="post-tags">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/前端/">前端</a></li></ul>
+      </span>
+    </span>
+      <span class="slash">/</span>
+      <span class="read">
+      <span id="busuanzi_value_page_pv"></span> 点击
+    </span>
+      <span class="slash">/</span>
+      <span class="read">阅读耗时 9分钟</span>
+    </header>
+
+    <div class="post-content">
+      <p>原文地址：<a href="https://banggan.github.io/2019/02/20/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91%E8%80%85%E5%BA%94%E8%AF%A5%E6%98%8E%E7%99%BD%E7%9A%84%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" target="_blank" rel="noopener">前端开发者应该明白的浏览器工作原理</a></p>
+<h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a><a href="#前言" title="前言"></a>前言</h4><p>作为前端开发，我们平常跟浏览器打交道的时间也是最多的。在前端面试中，一个较为经典的问题：在浏览器地址中输入url地址，敲回车，发生了什么？浏览器究竟做了什么？相信很多人脑海里都会出现个大概的轮廓，可是一到细化具体的过程就答不上来。那么，作为前端开发者，应该从哪些方面延伸来回答这个问题呢？</p>
+<h4 id="浏览器工作流程"><a href="#浏览器工作流程" class="headerlink" title="浏览器工作流程"></a><a href="#浏览器工作流程" title="浏览器工作流程"></a>浏览器工作流程</h4><p>对于浏览器来说，当在地址栏输入url地址，浏览器所做的事情就是把一个url变成一个在屏幕上显示的网页,大致的过程是这样的：<br><img src="https://raw.githubusercontent.com/banggan/banggan.github.io/master/images/webkit.png" alt="在这里插入图片描述"><br>从HTTP请求回来 ，产生流食的数据，DOM的构建、CSS计算、渲染、绘制，都是尽可能的流式处理前一步的产出，不需要等待上一步完全接受才开始处理，所以我们在浏览网页的时候，才会逐步出现页面。</p>
+<ol>
+<li>浏览器接受url开启一个网络请求线程</li>
+<li>浏览器发出一个完整的http请求</li>
+<li>服务器接收请求到后台接收请求</li>
+<li>使用http请求请求页面</li>
+<li>把请求回来的html代码解析成DOM树</li>
+<li>CSS的可视化格式模型解析</li>
+<li>根据CSS属性对元素进行渲染，得到内存中的位图</li>
+<li>对位图的合成</li>
+<li>绘制页面</li>
+</ol>
+<h4 id="浏览器接受url开启网络请求线程"><a href="#浏览器接受url开启网络请求线程" class="headerlink" title="浏览器接受url开启网络请求线程"></a><a href="#浏览器接受url开启网络请求线程" title="浏览器接受url开启网络请求线程"></a>浏览器接受url开启网络请求线程</h4><p>第一点主要涉及的是浏览器的进程、线程模型以及JS的运行机制：</p>
+<h5 id="多进程的浏览器"><a href="#多进程的浏览器" class="headerlink" title="多进程的浏览器"></a><a href="#多进程的浏览器" title="多进程的浏览器"></a>多进程的浏览器</h5><p>浏览器是多进程的，有一个主控进程，以及每一个tab页面都会新开一个进程（某些情况下多个tab会合并进程）<br>进程可能包括主控进程，插件进程，GPU，tab页（浏览器内核）等等。</p>
+<ul>
+<li>Browser进程：浏览器的主进程（负责协调、主控），只有一个</li>
+<li>第三方插件进程：每种类型的插件对应一个进程，仅当使用该插件时才创建</li>
+<li>GPU进程：最多一个，用于3D绘制</li>
+<li>浏览器渲染进程（内核）：默认每个Tab页面一个进程，互不影响，控制页面渲染，脚本执行，事件处理等（有时候会优化，如多个空白tab会合并成一个进程）</li>
+</ul>
+<h5 id="多线程的浏览器内核"><a href="#多线程的浏览器内核" class="headerlink" title="多线程的浏览器内核"></a><a href="#多线程的浏览器内核" title="多线程的浏览器内核"></a>多线程的浏览器内核</h5><p>每一个tab页面可以看作是浏览器内核进程，然后这个进程是多线程的，它有几大类子线程：</p>
+<ul>
+<li>GUI线程</li>
+<li>JS引擎线程</li>
+<li>事件触发线程</li>
+<li>定时器线程</li>
+<li>网络请求线程</li>
+</ul>
+<h4 id="开启网络线程发出一个完整的http请求"><a href="#开启网络线程发出一个完整的http请求" class="headerlink" title="开启网络线程发出一个完整的http请求"></a><a href="#开启网络线程发出一个完整的http请求" title="开启网络线程发出一个完整的http请求"></a>开启网络线程发出一个完整的http请求</h4><p>该部分主要包括：dns查询、tcp/ip请求构建、五层因特网等内容</p>
+<h5 id="DNS查询"><a href="#DNS查询" class="headerlink" title="DNS查询"></a><a href="#DNS查询" title="DNS查询"></a>DNS查询</h5><p>如果输入的是域名，需要进行dns解析成IP，大致流程：</p>
+<ul>
+<li>如果浏览器有缓存，直接使用浏览器缓存，否则使用本机缓存，再没有的话就是用host</li>
+<li>如果本地没有，就向dns域名服务器查询（当然，中间可能还会经过路由，也有缓存等），查询到对应的IP。</li>
+</ul>
+<h5 id="tcp-ip请求"><a href="#tcp-ip请求" class="headerlink" title="tcp/ip请求"></a><a href="#tcp-ip请求" title="tcp/ip请求"></a>tcp/ip请求</h5><blockquote>
+<p>这里的tcp/ip请求需要了解3次握手规则建立连接以及断开连接时的四次挥手,可以参考之前的博客：<a href="https://blog.csdn.net/bangbanggangan/article/details/81031639" target="_blank" rel="noopener">https://blog.csdn.net/bangbanggangan/article/details/81031639</a></p>
+</blockquote>
+<h5 id="五层因特网协议"><a href="#五层因特网协议" class="headerlink" title="五层因特网协议"></a><a href="#五层因特网协议" title="五层因特网协议"></a>五层因特网协议</h5><p>其实这个概念挺难记全的，记不全没关系，但是要有一个整体概念。<br>其实就是一个概念：从客户端发出http请求到服务器接收，中间会经过一系列的流程。<br>简括就是：从应用层的发送http请求，到传输层通过三次握手建立tcp/ip连接，再到网络层的ip寻址，再到数据链路层的封装成帧，最后到物理层的利用物理介质传输。<br>当然，服务端的接收就是反过来的步骤。<br>五层因特尔协议栈其实就是： 1.应用层(dns,http)  2.传输层(tcp,udp) 建立tcp连接（三次握手） 3.网络层(IP,ARP) IP寻址 4.数据链路层(PPP) 5.物理层<br>OSI七层框架： 物理层、 数据链路层、 网络层、 传输层、 会话层、 表示层、 应用层。<br>表示层：主要处理两个通信系统中交换信息的表示方式，包括数据格式交换，数据加密与解密，数据压缩与终端类型转换等<br>会话层：它具体管理不同用户和进程之间的对话，如控制登陆和注销过程</p>
+<h4 id="网络通讯HTTP协议"><a href="#网络通讯HTTP协议" class="headerlink" title="网络通讯HTTP协议"></a><a href="#网络通讯HTTP协议" title="网络通讯HTTP协议"></a>网络通讯HTTP协议</h4><p>HTTP协议是基于TCP协议出现的，在TCP的基础上规定了Request-Response的模型，决定了通讯必须由浏览器端发起的，首先来了解下HTTP协议的格式：</p>
+<h5 id="HTTP协议格式"><a href="#HTTP协议格式" class="headerlink" title="HTTP协议格式"></a><a href="#HTTP协议格式" title="HTTP协议格式"></a>HTTP协议格式</h5><p>HTTP协议大致可以分成以下部分：其中path是请求路径、version是固定的字符串，依次介绍下面的每个部分：<br><img src="https://raw.githubusercontent.com/banggan/banggan.github.io/master/images/http.jpg" alt="在这里插入图片描述"></p>
+<h5 id="HTTP-Method-请求方法"><a href="#HTTP-Method-请求方法" class="headerlink" title="HTTP Method 请求方法"></a><a href="#HTTP-Method-请求方法" title="HTTP Method 请求方法"></a>HTTP Method 请求方法</h5><p>在requestline里面的方法部分，表示HTTP的操作类型，常见的几种请求方法如下：</p>
+<ul>
+<li>GET：浏览器通过地址访问页面均属于get请求</li>
+<li>POST：常见的表单提交</li>
+<li>HEAD ：跟get类似，区别在于只返回请求头</li>
+<li>PUT：表示添加资源</li>
+<li>DELETE：表示删除资源</li>
+<li>CONNECT： 多用于HTTPS和WebSocket</li>
+<li>OPTIONS</li>
+<li>TRACE</li>
+</ul>
+<h5 id="HTTP-Status-code状态码"><a href="#HTTP-Status-code状态码" class="headerlink" title="HTTP Status code状态码"></a><a href="#HTTP-Status-code状态码" title="HTTP Status code状态码"></a>HTTP Status code状态码</h5><p>常见的状态码有以下几种：</p>
+<ul>
+<li>1xx：临时回应</li>
+<li>2xx：请求成功，如200</li>
+<li>3xx：请求目标有变化，如301和302表示临时和永久重定向，304表示客户端没有更新内容</li>
+<li>4xx;请求错误，如403无权限，404访问的资源不存在</li>
+<li>5xx：服务端错误，如500服务端错误，503服务端暂时错误等</li>
+</ul>
+<p>在前端开发中，最熟悉的系列无非是大家都喜欢的200请求成功的标志，在面试中，问得较多的是304缓存问题和301、302重定向的问题。</p>
+<h5 id="HTTP-HEAD（HTTP头）"><a href="#HTTP-HEAD（HTTP头）" class="headerlink" title="HTTP HEAD（HTTP头）"></a><a href="#HTTP-HEAD（HTTP头）" title="HTTP HEAD（HTTP头）"></a>HTTP HEAD（HTTP头）</h5><p>HTTP头可以看做是一个键值对，在HTTP标准中，Request Header如下图：<br><img src="https://raw.githubusercontent.com/banggan/banggan.github.io/master/images/req-http.png" alt="在这里插入图片描述"><br>Response Header如下图：<br><img src="https://raw.githubusercontent.com/banggan/banggan.github.io/master/images/res-http.png" alt="在这里插入图片描述"><br>在实际的开发中，完整的列表可以参考rfc2616标准。</p>
+<h5 id="HTTP-Request-Body"><a href="#HTTP-Request-Body" class="headerlink" title="HTTP Request Body"></a><a href="#HTTP-Request-Body" title="HTTP Request Body"></a>HTTP Request Body</h5><p>HTTP请求的body主要用于表单的提交，常见的body格式：</p>
+<ul>
+<li>application/json</li>
+<li>application/x-www-form-urlencoded:使用form标签提交的html请求，默认产生</li>
+<li>multipart/form-data:当有文件上传时，使用的格式</li>
+</ul>
+<h5 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a><a href="#HTTPS" title="HTTPS"></a>HTTPS</h5><p>HTTPS在HTTP的基础上增加了两个作用，一是确定请求的目标服务端身份，二是保证传输的数据不会被篡改或者窃听，该协议使用加密通道来传输HTTP内容，所以首先需要与服务端简历TLS加密通道。可以在此处查看详情：<a href="https://tools.ietf.org/html/rfc2818" target="_blank" rel="noopener">https://tools.ietf.org/html/rfc2818</a></p>
+<h5 id="HTTP2"><a href="#HTTP2" class="headerlink" title="HTTP2"></a><a href="#HTTP2" title="HTTP2"></a>HTTP2</h5><p>HTTP2是HTTP1.1的升级版，有两大改进：一是支持服务端推送，二是支持TCP链接复用：则使用同一个TCP链接来传输多个HTTP请求。详情见:<a href="https://tools.ietf.org/html/rfc7540" target="_blank" rel="noopener">https://tools.ietf.org/html/rfc7540</a></p>
+<h4 id="构建DOM树"><a href="#构建DOM树" class="headerlink" title="构建DOM树"></a><a href="#构建DOM树" title="构建DOM树"></a>构建DOM树</h4><p>当浏览器使用HTTP向服务端请求页面后，那么如何去解析请求回来的HTML代码、构建DOM树呢？<br><img src="https://raw.githubusercontent.com/banggan/banggan.github.io/master/images/html-http.png" alt="在这里插入图片描述"></p>
+<h5 id="字符流如何解析成词"><a href="#字符流如何解析成词" class="headerlink" title="字符流如何解析成词"></a><a href="#字符流如何解析成词" title="字符流如何解析成词"></a>字符流如何解析成词</h5><p>首先浏览器读取获取的HTML，根据指定的文件编码方式如UTF-8转换为字符流，再将字符串转换为词Token。那什么是词？词是编译原理中的最小单元，如标签开始、属性、标签结束、注释、CDATA节点。Token会标识出当前Token的种类。举个列子：<br><code>&amp;lt;p class=&amp;quot;a&amp;quot; &amp;gt;hello&amp;lt;/p&amp;gt;</code></p>
+<p>这里就可以拆分成&lt;p（p标签的开始）、class=”a”（属性）、&gt;（p标签的结束）、hello（文本）、<code>&amp;lt;/p&amp;gt;</code>（结束标签）</p>
+<h5 id="构建DOM树-1"><a href="#构建DOM树-1" class="headerlink" title="构建DOM树"></a><a href="#构建DOM树-1" title="构建DOM树"></a>构建DOM树</h5><p>接下来就是将词变成DOM树。在构建DOM树时，是一边生成Token一边消耗Token来生成节点的。</p>
+<pre><code>&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+    &amp;lt;title&amp;gt;Web page parsing&amp;lt;/title&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body&amp;gt;
+    &amp;lt;div&amp;gt;
+        &amp;lt;h1&amp;gt;Web page parsing&amp;lt;/h1&amp;gt;
+        &amp;lt;p&amp;gt;This is an example Web page.&amp;lt;/p&amp;gt;
+    &amp;lt;/div&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+</code></pre><p>构建的DOM树：<br><img src="https://raw.githubusercontent.com/banggan/banggan.github.io/master/images/dom-http.png" alt="在这里插入图片描述"></p>
+<h4 id="构建CSSOM"><a href="#构建CSSOM" class="headerlink" title="构建CSSOM"></a><a href="#构建CSSOM" title="构建CSSOM"></a>构建CSSOM</h4><p>在构建完DOM树，当前的对象只包含节点和属性，没有任何样式信息，那么浏览器是如何给DOM树添加CSS属性呢？我们知道浏览器是流式的处理整个过程，我们拿到DOM树构造好的元素，依次去检查他匹配的规则，再根据规则的优先级，做覆盖和调整。</p>
+<h4 id="构建渲染树"><a href="#构建渲染树" class="headerlink" title="构建渲染树"></a><a href="#构建渲染树" title="构建渲染树"></a>构建渲染树</h4><p>当CSSOM树和DOM树都得到之后，将两个树进行合并就得到了渲染树：<br><img src="https://raw.githubusercontent.com/banggan/banggan.github.io/master/images/render.png" alt="在这里插入图片描述"></p>
+<h4 id="布局与绘制"><a href="#布局与绘制" class="headerlink" title="布局与绘制"></a><a href="#布局与绘制" title="布局与绘制"></a>布局与绘制</h4><p>当浏览器生成渲染树以后，就会根据渲染树来进行布局。在这个过程中，每一个元素都要要弄清楚各个节点在页面中的确切位置和大小，把对应的盒变为相应的位图。一个元素可能对应多个盒（如内联元素，可能被分成多行）每一个盒都对应着一个位图。合成把部分位图合成变成合成层。最终的绘制过程就是把位图合成层绘制到屏幕上。<br>这里提一个常见的问题，重绘和回流？具体的相关知识参考：<a href="https://segmentfault.com/a/1190000017329980" target="_blank" rel="noopener">https://segmentfault.com/a/1190000017329980</a></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a><a href="#总结" title="总结"></a>总结</h4><p>浏览器的工作流程大致就是：</p>
+<blockquote>
+<p>构建DOM树-构建CSSOM-构建渲染树-布局-绘制</p>
+</blockquote>
+
+    </div>
+
+    <!-- <div>全文完。</div> -->
+  </article>
+  <div class="toc-container">
+    
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#浏览器工作流程"><span class="toc-text">浏览器工作流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#浏览器接受url开启网络请求线程"><span class="toc-text">浏览器接受url开启网络请求线程</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#多进程的浏览器"><span class="toc-text">多进程的浏览器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#多线程的浏览器内核"><span class="toc-text">多线程的浏览器内核</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#开启网络线程发出一个完整的http请求"><span class="toc-text">开启网络线程发出一个完整的http请求</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#DNS查询"><span class="toc-text">DNS查询</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#tcp-ip请求"><span class="toc-text">tcp/ip请求</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#五层因特网协议"><span class="toc-text">五层因特网协议</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#网络通讯HTTP协议"><span class="toc-text">网络通讯HTTP协议</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#HTTP协议格式"><span class="toc-text">HTTP协议格式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#HTTP-Method-请求方法"><span class="toc-text">HTTP Method 请求方法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#HTTP-Status-code状态码"><span class="toc-text">HTTP Status code状态码</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#HTTP-HEAD（HTTP头）"><span class="toc-text">HTTP HEAD（HTTP头）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#HTTP-Request-Body"><span class="toc-text">HTTP Request Body</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#HTTPS"><span class="toc-text">HTTPS</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#HTTP2"><span class="toc-text">HTTP2</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#构建DOM树"><span class="toc-text">构建DOM树</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#字符流如何解析成词"><span class="toc-text">字符流如何解析成词</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#构建DOM树-1"><span class="toc-text">构建DOM树</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#构建CSSOM"><span class="toc-text">构建CSSOM</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#构建渲染树"><span class="toc-text">构建渲染树</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#布局与绘制"><span class="toc-text">布局与绘制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+  </div>
+
+
+  </div>
+</div>
+<div class="copyright">
+    <span>本作品采用</span>
+    <a href="https://creativecommons.org/licenses/by/4.0/">知识共享署名 4.0 国际许可协议</a>
+    <span>进行许可。 转载时请注明原文链接。</span>
+</div>
+<!-- <div class="share" style="width: 100%;">
+  <img src="https://kevinofneu-blog-static.oss-cn-beijing.aliyuncs.com/static/2018-12-10-qrcode_for_gh_ffacf5722095_258.jpg" alt="Running Geek" style="margin: auto; display: block;"/>
+
+  <div style="margin: auto; text-align: center; font-size: 0.8em; color: grey;">老铁们关注走一走，不迷路</div>
+  
+</div> -->
+
+  
+    <div class="post-nav">
+      <div class="post-nav-item post-nav-next">
+        
+          <span>〈 </span>
+          <a href="/2019/03/05/canvas画板/" rel="next" title="canvas画板">
+          canvas画板
+          </a>
+        
+      </div>
+  
+      <div class="post-nav-item post-nav-prev">
+          
+          <a href="/2019/03/06/前段换肤方案/" rel="prev" title="前段换肤方案(repost)">
+            前段换肤方案(repost)
+          </a>
+          <span>〉</span>
+        
+      </div>
+    </div>
+  
+
+
+    </div>
+
+    
+
+  </div>
+  <footer class="footer text-center">
+    <div id="bottom-inner">
+        <a class="bottom-item" href="https://github.com/mrmcree">首页</a> |
+        <a class="bottom-item" href="https://github.com/mrmcree" target="_blank">主站</a> |
+        <a class="bottom-item" href="https://github.com/mrmcree" target="_blank">GitHub</a> |
+        <a class="bottom-item" href="https://hexo.io" target="_blank">Powered by hexo</a> |
+        <a class="bottom-item" href="https://github.com/KevinOfNeu/hexo-theme-xoxo" target="_blank">Theme xoxo</a>
+    </div>
+</footer>
+  
+
+<script>
+  (function(window, document, undefined) {
+
+    var timer = null;
+
+    function returnTop() {
+      cancelAnimationFrame(timer);
+      timer = requestAnimationFrame(function fn() {
+        var oTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (oTop > 0) {
+          document.body.scrollTop = document.documentElement.scrollTop = oTop - 50;
+          timer = requestAnimationFrame(fn);
+        } else {
+          cancelAnimationFrame(timer);
+        }
+      });
+    }
+
+    var hearts = [];
+    window.requestAnimationFrame = (function() {
+      return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+          setTimeout(callback, 1000 / 60);
+        }
+    })();
+    init();
+
+    function init() {
+      css(".heart{z-index:9999;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+      attachEvent();
+      gameloop();
+      addMenuEvent();
+    }
+
+    function gameloop() {
+      for (var i = 0; i < hearts.length; i++) {
+        if (hearts[i].alpha <= 0) {
+          document.body.removeChild(hearts[i].el);
+          hearts.splice(i, 1);
+          continue;
+        }
+        hearts[i].y--;
+        hearts[i].scale += 0.004;
+        hearts[i].alpha -= 0.013;
+        hearts[i].el.style.cssText = "left:" + hearts[i].x + "px;top:" + hearts[i].y + "px;opacity:" + hearts[i].alpha + ";transform:scale(" + hearts[i].scale + "," + hearts[i].scale + ") rotate(45deg);background:" + hearts[i].color;
+      }
+      requestAnimationFrame(gameloop);
+    }
+
+    /**
+     * 给logo设置点击事件
+     * 
+     * - 回到顶部
+     * - 出现爱心
+     */
+    function attachEvent() {
+      var old = typeof window.onclick === "function" && window.onclick;
+      var logo = document.getElementById("logo");
+      if (logo) {
+        logo.onclick = function(event) {
+          returnTop();
+          old && old();
+          createHeart(event);
+        }
+      }
+      
+    }
+
+    function createHeart(event) {
+      var d = document.createElement("div");
+      d.className = "heart";
+      hearts.push({
+        el: d,
+        x: event.clientX - 5,
+        y: event.clientY - 5,
+        scale: 1,
+        alpha: 1,
+        color: randomColor()
+      });
+      document.body.appendChild(d);
+    }
+
+    function css(css) {
+      var style = document.createElement("style");
+      style.type = "text/css";
+      try {
+        style.appendChild(document.createTextNode(css));
+      } catch (ex) {
+        style.styleSheet.cssText = css;
+      }
+      document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    function randomColor() {
+      // return "rgb(" + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + "," + (~~(Math.random() * 255)) + ")";
+      return "#F44336";
+    }
+
+    function addMenuEvent() {
+      var menu = document.getElementById('menu-main-post');
+      if (menu) {
+        var toc = document.getElementById('toc');
+        if (toc) {
+          menu.onclick = function() {
+            if (toc) {
+              if (toc.style.display == 'block') {
+                toc.style.display = 'none';
+              } else {
+                toc.style.display = 'block';
+              }
+            }
+          };
+        } else {
+          menu.style.display = 'none';
+        }
+      }
+    }
+
+  })(window, document);
+  hljs.initHighlightingOnLoad();
+</script>
+
+  
+
+
+
+  <!-- <script>hljs.initHighlightingOnLoad();</script> -->
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/tororo.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
